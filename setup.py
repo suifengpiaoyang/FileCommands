@@ -17,7 +17,8 @@ setuptools.setup(
     entry_points={
         "console_scripts": [
             "zcopy=FileCommands:zcopy",
-            "zmove=FileCommands:zmove"
+            "zmove=FileCommands:zmove",
+            "zdel=FileCommands:zdel"
         ]
     },
     # python_requires='>=3.8.6',

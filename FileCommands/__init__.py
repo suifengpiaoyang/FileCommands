@@ -13,7 +13,7 @@ def main():
                         action='store_true',
                         help='list all the supported commands')
     args = parser.parse_args()
-    supported_commands = ['zcopy', 'zmove']
+    supported_commands = ['zcopy', 'zmove', 'zdel']
     if args.list:
         print('Supported Commands:\n')
         for command in supported_commands:

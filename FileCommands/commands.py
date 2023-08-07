@@ -5,6 +5,30 @@ import shutil
 import sys
 
 
+def _del(params):
+    description = params.get('description')
+    files_function = params['files_function']
+    directory_function = params['directory_function']
+
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('src', help='source file path')
+    args = parser.parse_args()
+    src = os.path.abspath(args.src)
+    if os.path.isdir(src):
+        directory_function(src)
+    else:
+        path = os.path.dirname(src)
+        pattern = os.path.basename(src)
+        if not os.path.exists(path):
+            print(f'Error: [{path}]: No such path!')
+            sys.exit()
+        names = os.listdir(path)
+        matches = fnmatch.filter(names, pattern)
+        for file in matches:
+            filepath = os.path.join(path, file)
+            files_function(filepath)
+
+
 def _copy(params):
     # extract params
     description = params.get('description')
@@ -65,3 +89,12 @@ def zmove():
         'directory_function': shutil.move
     }
     _copy(params)
+
+
+def zdel():
+    params = {
+        'description': 'delete files or folder, not send to trash!',
+        'files_function': os.remove,
+        'directory_function': shutil.rmtree
+    }
+    _del(params)
