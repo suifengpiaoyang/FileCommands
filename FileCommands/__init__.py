@@ -5,7 +5,8 @@ from .commands import *
 
 def main():
     parser = argparse.ArgumentParser(
-        description='supply some file commands for different system',
+        description='provides a set of user-friendly file manipulation '
+        'commands to simplify common file management tasks',
         epilog='type <command> -h for more details'
     )
     parser.add_argument('-l',
@@ -13,7 +14,7 @@ def main():
                         action='store_true',
                         help='list all the supported commands')
     args = parser.parse_args()
-    supported_commands = ['zcopy', 'zmove', 'zdel']
+    supported_commands = ['zcopy', 'zmove', 'zdel', 'zrecycle']
     if args.list:
         print('Supported Commands:\n')
         for command in supported_commands:

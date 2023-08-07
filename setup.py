@@ -9,7 +9,7 @@ setuptools.setup(
     version="0.0.1",
     author="Zhang",
     author_email="",
-    description="supply some file commands for different system",
+    description="supply some file commands",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
@@ -18,11 +18,12 @@ setuptools.setup(
         "console_scripts": [
             "zcopy=FileCommands:zcopy",
             "zmove=FileCommands:zmove",
-            "zdel=FileCommands:zdel"
+            "zdel=FileCommands:zdel",
+            "zrecycle=FileCommands:zrecycle"
         ]
     },
-    # python_requires='>=3.8.6',
-    # install_requires=[
-    #     'bs4>=0.0.1',
-    # ]
+    python_requires='>=3.7',
+    install_requires=[
+        'send2trash>=1.8.0',
+    ]
 )

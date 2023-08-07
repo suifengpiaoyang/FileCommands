@@ -5,6 +5,9 @@ import shutil
 import sys
 
 
+from send2trash import send2trash
+
+
 def _del(params):
     description = params.get('description')
     files_function = params['files_function']
@@ -96,5 +99,14 @@ def zdel():
         'description': 'delete files or folder, not send to trash!',
         'files_function': os.remove,
         'directory_function': shutil.rmtree
+    }
+    _del(params)
+
+
+def zrecycle():
+    params = {
+        'description': 'send files or folder to the trash',
+        'files_function': send2trash,
+        'directory_function': send2trash
     }
     _del(params)
