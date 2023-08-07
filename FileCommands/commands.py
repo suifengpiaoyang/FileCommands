@@ -4,13 +4,15 @@ import os
 import shutil
 import sys
 
-from functools import partial
 
+def _copy(params):
+    # extract params
+    description = params.get('description')
+    files_function = params['files_function']
+    directory_function = params['directory_function']
 
-def zcopy():
-    parser = argparse.ArgumentParser(
-        description='copy files to destination'
-    )
+    # main function
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument('src', help='source, can be file or folder')
     parser.add_argument('dst', help='destination')
     args = parser.parse_args()
@@ -18,7 +20,9 @@ def zcopy():
     dst = os.path.abspath(args.dst)
     if os.path.isdir(src):
         if os.path.isdir(dst):
-            shutil.copy2(src, dst)
+            basename = os.path.basename(src)
+            target = os.path.join(dst, basename)
+            directory_function(src, target)
         else:
             print(f'Error: [{dst}] must be a directory!')
             sys.exit()
@@ -35,14 +39,29 @@ def zcopy():
             pass
         elif nums == 1:
             filepath = os.path.join(path, matches[0])
-            shutil.copy2(filepath, dst)
+            files_function(filepath, dst)
         else:
             if not os.path.isdir(dst):
                 print(f'Error: [{dst}] not a directory!')
                 sys.exit()
             for file in matches:
                 filepath = os.path.join(path, file)
-                shutil.copy2(filepath, dst)
+                files_function(filepath, dst)
+
+
+def zcopy():
+    params = {
+        'description': 'copy files to destination',
+        'files_function': shutil.copy2,
+        'directory_function': shutil.copytree
+    }
+    _copy(params)
+
 
 def zmove():
-    pass
+    params = {
+        'description': 'move files to destination',
+        'files_function': shutil.move,
+        'directory_function': shutil.move
+    }
+    _copy(params)
