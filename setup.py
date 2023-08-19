@@ -19,7 +19,8 @@ setuptools.setup(
             "zcopy=FileCommands:zcopy",
             "zmove=FileCommands:zmove",
             "zdel=FileCommands:zdel",
-            "zrecycle=FileCommands:zrecycle"
+            "zrecycle=FileCommands:zrecycle",
+            "zlist=FileCommands:zlist"
         ]
     },
     python_requires='>=3.7',

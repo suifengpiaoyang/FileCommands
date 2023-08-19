@@ -14,7 +14,7 @@ def main():
                         action='store_true',
                         help='list all the supported commands')
     args = parser.parse_args()
-    supported_commands = ['zcopy', 'zmove', 'zdel', 'zrecycle']
+    supported_commands = ['zcopy', 'zmove', 'zdel', 'zrecycle', 'zlist']
     if args.list:
         print('Supported Commands:\n')
         for command in supported_commands:

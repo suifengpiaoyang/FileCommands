@@ -110,3 +110,21 @@ def zrecycle():
         'directory_function': send2trash
     }
     _del(params)
+
+
+def zlist():
+    parser = argparse.ArgumentParser(
+        description='list the file name which is matched'
+    )
+    parser.add_argument('pattern', help='the match pattern')
+    args = parser.parse_args()
+    abspath = os.path.abspath(args.pattern)
+    path = os.path.dirname(abspath)
+    pattern = os.path.basename(abspath)
+    if not os.path.exists(path):
+        print(f'Error: [{path}]: No such path!')
+        sys.exit()
+    names = os.listdir(path)
+    matches = fnmatch.filter(names, pattern)
+    for file in matches:
+        print(file)
