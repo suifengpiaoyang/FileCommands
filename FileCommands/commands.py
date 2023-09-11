@@ -140,6 +140,10 @@ def zlist():
         description='list the file name which is matched'
     )
     parser.add_argument('pattern', help='the match pattern')
+    parser.add_argument('-r',
+                        '--recursive',
+                        action='store_true',
+                        help='delete files recursively')
     args = parser.parse_args()
     abspath = os.path.abspath(args.pattern)
     path = os.path.dirname(abspath)
@@ -147,7 +151,14 @@ def zlist():
     if not os.path.exists(path):
         print(f'Error: [{path}]: No such path!')
         sys.exit()
-    names = os.listdir(path)
-    matches = fnmatch.filter(names, pattern)
-    for file in matches:
-        print(file)
+    if args.recursive:
+        for root, dirs, files in os.walk(path):
+            matches = fnmatch.filter(files, pattern)
+            for file in matches:
+                filepath = os.path.join(root, file)
+                print(filepath)
+    else:
+        names = os.listdir(path)
+        matches = fnmatch.filter(names, pattern)
+        for file in matches:
+            print(file)
