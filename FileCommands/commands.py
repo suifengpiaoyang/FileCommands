@@ -8,16 +8,25 @@ import sys
 from send2trash import send2trash
 
 
-def _del(params):
+def _del(params, command_name=None):
     description = params.get('description')
     files_function = params['files_function']
     directory_function = params['directory_function']
 
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('src', help='source file path')
+    parser.add_argument('-r',
+                        '--recursive',
+                        action='store_true',
+                        help='delete files recursively')
     args = parser.parse_args()
     src = os.path.abspath(args.src)
+    r_flag = args.recursive
     if os.path.isdir(src):
+        if r_flag:
+            print('Directory not supported -r parameter!' +
+                  ' The file and directory has not changed.')
+            return
         directory_function(src)
     else:
         path = os.path.dirname(src)
@@ -25,11 +34,25 @@ def _del(params):
         if not os.path.exists(path):
             print(f'Error: [{path}]: No such path!')
             sys.exit()
-        names = os.listdir(path)
-        matches = fnmatch.filter(names, pattern)
-        for file in matches:
-            filepath = os.path.join(path, file)
-            files_function(filepath)
+        if r_flag:
+            if command_name == 'zdel':
+                _f = input('Warnning! You try to delete files and the files '
+                           'does not send to trash! Are you sure to do this?'
+                           '(y/n, default n)')
+                if _f not in ('y', 'Y'):
+                    print('Not delete any files!')
+                    return
+            for root, dirs, files in os.walk(path):
+                matches = fnmatch.filter(files, pattern)
+                for file in matches:
+                    filepath = os.path.join(root, file)
+                    files_function(filepath)
+        else:
+            names = os.listdir(path)
+            matches = fnmatch.filter(names, pattern)
+            for file in matches:
+                filepath = os.path.join(path, file)
+                files_function(filepath)
 
 
 def _copy(params):
@@ -100,7 +123,7 @@ def zdel():
         'files_function': os.remove,
         'directory_function': shutil.rmtree
     }
-    _del(params)
+    _del(params, command_name='zdel')
 
 
 def zrecycle():
