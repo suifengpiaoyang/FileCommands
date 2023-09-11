@@ -143,7 +143,7 @@ def zlist():
     parser.add_argument('-r',
                         '--recursive',
                         action='store_true',
-                        help='delete files recursively')
+                        help='list files recursively')
     args = parser.parse_args()
     abspath = os.path.abspath(args.pattern)
     path = os.path.dirname(abspath)
