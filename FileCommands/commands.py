@@ -70,6 +70,13 @@ def _copy(params):
         help='target directory, if the directory not exists, '
         'it will be create automatically.'
     )
+    parser.add_argument(
+        '-r',
+        '--recursive',
+        action='store_true',
+        help='find file which match pattern from src '
+        'recursively, and copy all files to dst'
+    )
     args = parser.parse_args()
     src = os.path.abspath(args.src)
     dst = os.path.abspath(args.dst)
@@ -87,16 +94,21 @@ def _copy(params):
         path = os.path.dirname(src)
         pattern = os.path.basename(src)
         if not os.path.exists(path):
-            print(f'Error: [{path}]: No such path!')
+            print(f'Error: Path [{path}] not exists!')
             sys.exit()
-        names = os.listdir(path)
-        matches = fnmatch.filter(names, pattern)
-        nums = len(matches)
-        if nums == 0:
-            return
+        if os.path.isfile(dst):
+            print(f'Error: dst must be directory, not a file!')
+        if not os.path.exists(dst):
+            os.makedirs(dst)
+        if args.recursive:
+            for root, dirs, files in os.walk(path):
+                matches = fnmatch.filter(files, pattern)
+                for file in matches:
+                    filepath = os.path.join(root, file)
+                    files_function(filepath, dst)
         else:
-            if not os.path.exists(dst):
-                os.makedirs(dst)
+            names = os.listdir(path)
+            matches = fnmatch.filter(names, pattern)
             for file in matches:
                 filepath = os.path.join(path, file)
                 files_function(filepath, dst)
