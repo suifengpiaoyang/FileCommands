@@ -6,6 +6,7 @@ import sys
 
 
 from send2trash import send2trash
+from distutils.dir_util import copy_tree
 
 
 def _del(params, command_name=None):
@@ -64,11 +65,16 @@ def _copy(params):
     # main function
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('src', help='source, can be file or folder')
-    parser.add_argument('dst', help='destination')
+    parser.add_argument(
+        'dst',
+        help='target directory, if the directory not exists, '
+        'it will be create automatically.'
+    )
     args = parser.parse_args()
     src = os.path.abspath(args.src)
     dst = os.path.abspath(args.dst)
     if os.path.isdir(src):
+        # for folder
         if os.path.isdir(dst):
             basename = os.path.basename(src)
             target = os.path.join(dst, basename)
@@ -77,6 +83,7 @@ def _copy(params):
             print(f'Error: [{dst}] must be a directory!')
             sys.exit()
     else:
+        # for files
         path = os.path.dirname(src)
         pattern = os.path.basename(src)
         if not os.path.exists(path):
@@ -86,14 +93,10 @@ def _copy(params):
         matches = fnmatch.filter(names, pattern)
         nums = len(matches)
         if nums == 0:
-            pass
-        elif nums == 1:
-            filepath = os.path.join(path, matches[0])
-            files_function(filepath, dst)
+            return
         else:
-            if not os.path.isdir(dst):
-                print(f'Error: [{dst}] not a directory!')
-                sys.exit()
+            if not os.path.exists(dst):
+                os.makedirs(dst)
             for file in matches:
                 filepath = os.path.join(path, file)
                 files_function(filepath, dst)
@@ -103,7 +106,7 @@ def zcopy():
     params = {
         'description': 'copy files to destination',
         'files_function': shutil.copy2,
-        'directory_function': shutil.copytree
+        'directory_function': copy_tree
     }
     _copy(params)
 
