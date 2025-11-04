@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "FileCommands"
+version = "1.0.0"
+authors = [
+    { name = "Zhang" }
+]
+description = "supply some file commands"
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = [
+    'send2trash>=1.8.0'
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/suifengpiaoyang/FileCommands"
+
+[project.scripts]
+zcopy = "FileCommands:zcopy"
+zmove = "FileCommands:zmove"
+zdel = "FileCommands:zdel"
+zrecycle = "FileCommands:zrecycle"
+zlist = "FileCommands:zlist"
